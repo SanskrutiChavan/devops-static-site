@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/<YOUR_GITHUB_USERNAME>/devops-static-site.git'
+                    url: 'https:/SanskrutiChavan/github.com//devops-static-site.git'
             }
         }
 
