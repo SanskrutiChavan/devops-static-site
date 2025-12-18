@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_DEFAULT_REGION = "us-east-1"
+        S3_BUCKET = "sans-devops-static-site"
+    }
+
     tools {
         maven 'maven-3.9'
     }
@@ -10,13 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/SanskrutiChavan/devops-static-site.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Build stage (static site - no compile needed)'
+                    url: 'https://github.com/<YOUR_GITHUB_USERNAME>/devops-static-site.git'
             }
         }
 
@@ -26,9 +25,34 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test - SonarQube') {
             steps {
-                echo 'SonarQube test will be added later'
+                withSonarQubeEnv('sonar') {
+                    sh 'sonar-scanner'
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform -chdir=terraform/site init'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                withCredentials([[
+                  $class: 'AmazonWebServicesCredentialsBinding',
+                  credentialsId: 'aws-creds'
+                ]]) {
+                    sh 'terraform -chdir=terraform/site apply -auto-approve'
+                }
+            }
+        }
+
+        stage('Deploy to S3') {
+            steps {
+                sh 'aws s3 sync src/ s3://$S3_BUCKET --delete'
             }
         }
     }
