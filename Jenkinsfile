@@ -7,17 +7,10 @@ pipeline {
     }
 
     tools {
-        maven 'maven-3.9'
+        maven 'maven'
     }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https:/SanskrutiChavan/github.com//devops-static-site.git'
-            }
-        }
 
         stage('Validate') {
             steps {
