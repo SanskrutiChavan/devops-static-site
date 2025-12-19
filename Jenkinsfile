@@ -6,10 +6,6 @@ pipeline {
         S3_BUCKET = "sans-devops-static-site"
     }
 
-    tools {
-        terraform 'terraform'
-    }
-
     stages {
 
         stage('Validate') {
