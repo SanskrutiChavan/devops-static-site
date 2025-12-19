@@ -12,6 +12,14 @@ resource "aws_cloudfront_distribution" "cdn" {
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "s3-origin"
     viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   viewer_certificate {
