@@ -36,34 +36,19 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    sh 'terraform -chdir=terraform/site init'
-                }
+                sh 'terraform -chdir=terraform/site init'
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    sh 'terraform -chdir=terraform/site apply -auto-approve'
-                }
+                sh 'terraform -chdir=terraform/site apply -auto-approve'
             }
         }
 
         stage('Deploy to S3') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    sh 'aws s3 sync src/ s3://$S3_BUCKET --delete'
-                }
+                sh 'aws s3 sync src/ s3://$S3_BUCKET --delete'
             }
         }
     }
