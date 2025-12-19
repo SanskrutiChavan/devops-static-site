@@ -40,6 +40,11 @@ resource "aws_cloudfront_distribution" "cdn" {
       restriction_type = "none"
     }
   }
+
+  # ✅ ADDED (SAFE & RECOMMENDED)
+  depends_on = [
+    aws_cloudfront_origin_access_control.oac
+  ]
 }
 
 output "cloudfront_url" {
