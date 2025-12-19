@@ -21,12 +21,16 @@ pipeline {
 
         stage('Test - SonarQube') {
             steps {
-                withSonarQubeEnv('sonar') {
-                    sh '''
-                      sonar-scanner \
-                      -Dsonar.projectKey=devops-static-site \
-                      -Dsonar.sources=src
-                    '''
+                script {
+                    def scannerHome = tool 'sonar'
+                    withSonarQubeEnv('sonar') {
+                        sh """
+                          ${scannerHome}/bin/sonar-scanner \
+                          -Dsonar.projectKey=devops-static-site \
+                          -Dsonar.projectName=DevOps-Static-Site \
+                          -Dsonar.sources=src
+                        """
+                    }
                 }
             }
         }
@@ -40,8 +44,8 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 withCredentials([[
-                  $class: 'AmazonWebServicesCredentialsBinding',
-                  credentialsId: 'aws-creds'
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
                 ]]) {
                     sh 'terraform -chdir=terraform/site apply -auto-approve'
                 }
