@@ -47,5 +47,16 @@ pipeline {
                 sh 'aws s3 sync src/ s3://$S3_BUCKET --delete'
             }
         }
+
+        /* 🔥 NEW STAGE – DO NOT MODIFY ANYTHING ABOVE */
+        stage('Invalidate CloudFront Cache') {
+            steps {
+                sh '''
+                  aws cloudfront create-invalidation \
+                  --distribution-id E2WGKZHL0DRIXZ \
+                  --paths "/*"
+                '''
+            }
+        }
     }
 }
