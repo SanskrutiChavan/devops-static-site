@@ -5,8 +5,23 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🚀 DevOps Project </h1>
+
+  <h1>DevOps Project</h1>
+
+  <p class="version">Version: v1.1</p>
+
   <p>Pipeline triggered automatically 🎉</p>
   <p>Jenkins • Terraform • AWS • GitHub</p>
+
+  <p class="timestamp">
+    Last Updated: <span id="time"></span>
+  </p>
+
+  <button>CloudFront Auto Refresh </button>
+
+  <script>
+    document.getElementById("time").innerText = new Date().toLocaleString();
+  </script>
+
 </body>
 </html>
