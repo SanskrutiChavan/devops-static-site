@@ -8,6 +8,7 @@ pipeline {
 
     tools {
         maven 'maven-3.9'
+        sonar 'sonar'
     }
 
     stages {
@@ -21,7 +22,11 @@ pipeline {
         stage('Test - SonarQube') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh 'sonar-scanner'
+                    sh '''
+                      sonar-scanner \
+                      -Dsonar.projectKey=devops-static-site \
+                      -Dsonar.sources=src
+                    '''
                 }
             }
         }
