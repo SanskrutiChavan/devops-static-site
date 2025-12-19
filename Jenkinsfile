@@ -7,7 +7,6 @@ pipeline {
     }
 
     tools {
-        maven 'maven-3.9'
         terraform 'terraform'
     }
 
@@ -37,7 +36,12 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform -chdir=terraform/site init'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    sh 'terraform -chdir=terraform/site init'
+                }
             }
         }
 
@@ -54,7 +58,12 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
-                sh 'aws s3 sync src/ s3://$S3_BUCKET --delete'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    sh 'aws s3 sync src/ s3://$S3_BUCKET --delete'
+                }
             }
         }
     }
