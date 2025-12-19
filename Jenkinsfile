@@ -8,7 +8,7 @@ pipeline {
 
     tools {
         maven 'maven-3.9'
-        sonar 'sonar'
+        terraform 'terraform'
     }
 
     stages {
